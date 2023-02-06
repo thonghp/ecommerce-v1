@@ -160,7 +160,7 @@
                             </a>
                         </li>
                         <li class="navbar-vertical-aside-has-menu">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="#">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="list_employees">
                                 <i class="tio-users-switch nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Nhân viên</span>
                             </a>

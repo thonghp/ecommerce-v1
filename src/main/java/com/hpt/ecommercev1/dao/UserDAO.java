@@ -471,6 +471,8 @@ public class UserDAO implements Serializable {
                     address.setWard(ward);
                     address.setDistrict(district);
                     address.setCity(city);
+
+                    return address;
                 }
             }
         } catch (Exception e) {
