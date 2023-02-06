@@ -1,7 +1,7 @@
 package com.hpt.ecommercev1.dao;
 
 import com.hpt.ecommercev1.entity.Address;
-//import com.hpt.ecommercev1.entity.HashGenerator;
+import com.hpt.ecommercev1.entity.HashGenerator;
 import com.hpt.ecommercev1.entity.Role;
 import com.hpt.ecommercev1.entity.User;
 import com.hpt.ecommercev1.utils.DBUtils;
@@ -83,8 +83,7 @@ public class UserDAO implements Serializable {
             userStm.setString(4, user.getImagePath());
 
             userStm.setString(5, user.getEmail());
-            userStm.setString(6, user.getPassword());
-//            userStm.setString(6, HashGenerator.generateMD5(user.getPassword()));
+            userStm.setString(6, HashGenerator.generateMD5(user.getPassword()));
             userStm.setBoolean(7, user.isEnabled());
 
             userStm.executeUpdate();
