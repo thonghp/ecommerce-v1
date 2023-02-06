@@ -14,5 +14,9 @@ public class Address {
     private String district;
     private String city;
     private User user;
+    @Override
+    public String toString() {
+        return street + " " + ward + " " + district + " " + city;
+    }
 }
 
