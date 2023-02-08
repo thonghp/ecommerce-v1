@@ -1,5 +1,6 @@
 package com.hpt.ecommercev1.service;
 
+import com.hpt.ecommercev1.dao.RoleDAO;
 import com.hpt.ecommercev1.dao.UserDAO;
 import com.hpt.ecommercev1.entity.User;
 
@@ -20,6 +21,7 @@ public class EmployeeService {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final UserDAO userDAO = UserDAO.getInstance();
+    private final RoleDAO roleDAO = RoleDAO.getInstance();
 
     public EmployeeService(HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
@@ -67,5 +69,11 @@ public class EmployeeService {
 
         String employeePage = "employee.jsp";
         request.getRequestDispatcher(employeePage).forward(request, response);
+    }
+
+    public void createEmployee() throws ServletException, IOException {
+        request.setAttribute("roles", roleDAO.findAllRolesExceptAdmin());
+        String createEmployeePage = "employee-form.jsp";
+        request.getRequestDispatcher(createEmployeePage).forward(request, response);
     }
 }
