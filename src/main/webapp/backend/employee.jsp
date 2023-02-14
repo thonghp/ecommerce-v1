@@ -30,6 +30,10 @@
             </div>
         </div>
 
+        <c:if test="${message != null}">
+            <div class="alert alert-success text-center" id="hideMessage">${message}</div>
+        </c:if>
+
         <div class="card">
             <div class="card-header">
                 <div class="row justify-content-between align-items-center flex-grow-1">
@@ -195,7 +199,8 @@
                                     <c:if test="${employee.id != 1}">
                                         <c:if test="${not empty employee.imagePath}">
                                             <div class="avatar avatar-circle">
-                                                <img class="avatar-img" src="assets\img\160x160\img10.jpg"
+                                                <img class="avatar-img"
+                                                     src="../images/employee/${employee.id}/${employee.imagePath}"
                                                      alt="Image Description">
                                             </div>
                                             <div class="ml-3">
@@ -281,6 +286,17 @@
 </main>
 
 <jsp:include page="js.jsp"/>
+
+<script type="text/javascript">
+    const message = document.getElementById('hideMessage');
+    if (message !== null) {
+        function hideMessage() {
+            message.style.display = 'none';
+        }
+
+        setTimeout(hideMessage, 5000);
+    }
+</script>
 
 </body>
 

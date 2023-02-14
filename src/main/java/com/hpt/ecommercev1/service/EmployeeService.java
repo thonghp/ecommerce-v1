@@ -2,15 +2,21 @@ package com.hpt.ecommercev1.service;
 
 import com.hpt.ecommercev1.dao.RoleDAO;
 import com.hpt.ecommercev1.dao.UserDAO;
+import com.hpt.ecommercev1.entity.Address;
+import com.hpt.ecommercev1.entity.Role;
 import com.hpt.ecommercev1.entity.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.hpt.ecommercev1.utils.Constants.*;
+import static com.hpt.ecommercev1.utils.FileUploadUtil.*;
 
 /**
  * @author Hoang Pham Thong
@@ -21,7 +27,6 @@ public class EmployeeService {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final UserDAO userDAO = UserDAO.getInstance();
-    private final RoleDAO roleDAO = RoleDAO.getInstance();
 
     public EmployeeService(HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
@@ -71,9 +76,94 @@ public class EmployeeService {
         request.getRequestDispatcher(employeePage).forward(request, response);
     }
 
+    public Map<Role, String> getCheckedRoles(User user) {
+        Map<Role, String> roleMap = new HashMap<>();
+
+        RoleDAO.getInstance().findAllRolesExceptAdmin().forEach(role -> roleMap.put(role, ""));
+        user.getRoles().forEach(role -> roleMap.put(role, "checked"));
+        return roleMap;
+    }
+
     public void createEmployee() throws ServletException, IOException {
-        request.setAttribute("roles", roleDAO.findAllRolesExceptAdmin());
-        String createEmployeePage = "employee-form.jsp";
+        createEmployee(new User());
+    }
+
+    public void createEmployee(User user) throws ServletException, IOException {
+        request.setAttribute("checkedRoles", getCheckedRoles(user));
+        String createEmployeePage = "employee_form.jsp";
         request.getRequestDispatcher(createEmployeePage).forward(request, response);
+    }
+
+    private User readAllFields(User user) {
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String phone = request.getParameter("phone");
+        String street = request.getParameter("street");
+        String ward = request.getParameter("ward");
+        String district = request.getParameter("district");
+        String city = request.getParameter("city");
+        String[] roles = request.getParameterValues("role");
+        boolean enabled = "on".equals(request.getParameter("enable"));
+
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setPhoneNumber(phone);
+        user.setEnabled(enabled);
+
+        Address address = new Address();
+        address.setStreet(street);
+        address.setWard(ward);
+        address.setDistrict(district);
+        address.setCity(city);
+        user.setAddress(address);
+
+        for (String roleId : roles) {
+            Role role = new Role();
+            role.setId(Integer.parseInt(roleId));
+            user.addRole(role);
+        }
+
+        return user;
+    }
+
+    /**
+     * Get employee information from the form and save it in the database.
+     *
+     * @throws ServletException If the request for the POST could not be handled.
+     * @throws IOException      If an input or output error is detected when the servlet handles the POST request.
+     */
+    public void saveEmployee() throws ServletException, IOException {
+        User user = readAllFields(new User());
+
+        boolean existEmployee = userDAO.checkEmailExists(user.getEmail());
+        if (existEmployee) {
+            String message = "Email " + user.getEmail() + " đã tồn tại";
+            request.setAttribute("message", message);
+            request.setAttribute("user", user);
+
+            createEmployee(user);
+        } else {
+            String fileName = extractFileName(request, "image");
+
+            if (!fileName.isEmpty()) {
+                user.setImagePath(fileName);
+                userDAO.save(user);
+
+                Integer id = userDAO.findByEmail(user.getEmail()).getId();
+                String nameDirectoryServer = "employee" + File.separator + id;
+
+                saveFileOnServer(request, nameDirectoryServer, "image", fileName);
+                saveFileOnApp(request, nameDirectoryServer, fileName);
+            } else {
+                userDAO.save(user);
+            }
+
+            String message = "Nhân viên " + user.getLastName() + " " + user.getFirstName() + " đã được thêm thành công !";
+            listEmployee(message);
+        }
     }
 }
