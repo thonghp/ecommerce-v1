@@ -5,7 +5,14 @@
 <html lang="en">
 
 <head>
-    <title>Admin - Thêm nhân viên</title>
+    <c:if test="${empty title}">
+        <title>Admin - Thêm nhân viên</title>
+    </c:if>
+
+    <c:if test="${not empty title}">
+        <title>Admin - ${title}</title>
+    </c:if>
+
     <jsp:include page="css.jsp"/>
 </head>
 
@@ -15,7 +22,8 @@
 
 <main id="content" role="main" class="main">
     <div class="content container-fluid">
-        <form class="js-step-form py-md-5" method="post" enctype="multipart/form-data" action="create_employee" id="userForm">
+        <form class="js-step-form py-md-5" method="post" enctype="multipart/form-data" action="create_employee"
+              id="userForm">
             <div class="row justify-content-lg-center">
                 <div class="col-lg-8">
                     <div id="addUserStepFormContent">
@@ -28,8 +36,15 @@
                                         <div class="d-flex align-items-center">
                                             <label class="avatar avatar-xl avatar-circle avatar-uploader mr-5"
                                                    for="avatarUploader">
-                                                <img id="avatarImg" class="avatar-img" src="assets\img\160x160\img1.jpg"
-                                                     alt="Image Description">
+
+                                                <c:if test="${not empty user.imagePath}">
+                                                    <img id="avatarImg" class="avatar-img" alt="Image Description"
+                                                         src="../images/employee/${user.id}/${user.imagePath}">
+                                                </c:if>
+                                                <c:if test="${empty user.imagePath}">
+                                                    <img id="avatarImg" class="avatar-img" alt="Image Description"
+                                                         src="../images/default/user.jpg">
+                                                </c:if>
 
                                                 <input type="file" class="js-file-attach avatar-uploader-input"
                                                        id="avatarUploader" name="image"
@@ -86,7 +101,8 @@
                                     </label>
 
                                     <div class="col-sm-9">
-                                        <input type="password" class="form-control" name="password" id="passwordLabel">
+                                        <input type="password" class="form-control" name="password" id="passwordLabel"
+                                               placeholder="${empty user.id ? '' : 'Để trống nếu không muốn thay đổi mật khẩu'}">
                                     </div>
                                 </div>
 

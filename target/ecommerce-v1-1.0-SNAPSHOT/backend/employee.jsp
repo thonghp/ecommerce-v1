@@ -179,50 +179,55 @@
                     <c:forEach var="employee" items="${listEmployees}">
                         <tr>
                             <td class="table-column-pl-1">
-                                <a class="d-flex align-items-center" href="edit_employee">
-                                        <%-- Admin --%>
-                                    <c:if test="${employee.id == 1}">
-                                        <div class="avatar avatar-soft-primary avatar-circle">
-                                            <span class="avatar-initials">A</span>
-                                        </div>
-                                        <div class="ml-3">
+                                <c:if test="${employee.id == 1}">
+                                <a class="d-flex align-items-center">
+                                    </c:if>
+                                    <c:if test="${employee.id != 1}">
+                                    <a class="d-flex align-items-center" href="edit_employee?id=${employee.id}">
+                                        </c:if>
+                                            <%-- Admin --%>
+                                        <c:if test="${employee.id == 1}">
+                                            <div class="avatar avatar-soft-primary avatar-circle">
+                                                <span class="avatar-initials">A</span>
+                                            </div>
+                                            <div class="ml-3">
                                             <span class="d-block h5 text-hover-primary mb-0">
                                                 Admin
                                                 <i class="tio-verified text-primary" data-toggle="tooltip"
-                                                   data-placement="top" title="Top endorsed"></i>
+                                                   data-placement="top"></i>
                                             </span>
-                                            <span class="d-block font-size-sm text-body">${employee.email}</span>
-                                        </div>
-                                    </c:if>
+                                                <span class="d-block font-size-sm text-body">${employee.email}</span>
+                                            </div>
+                                        </c:if>
 
-                                        <%-- Normal --%>
-                                    <c:if test="${employee.id != 1}">
-                                        <c:if test="${not empty employee.imagePath}">
-                                            <div class="avatar avatar-circle">
-                                                <img class="avatar-img"
-                                                     src="../images/employee/${employee.id}/${employee.imagePath}"
-                                                     alt="Image Description">
-                                            </div>
-                                            <div class="ml-3">
+                                            <%-- Normal --%>
+                                        <c:if test="${employee.id != 1}">
+                                            <c:if test="${not empty employee.imagePath}">
+                                                <div class="avatar avatar-circle">
+                                                    <img class="avatar-img"
+                                                         src="../images/employee/${employee.id}/${employee.imagePath}"
+                                                         alt="Image Description">
+                                                </div>
+                                                <div class="ml-3">
                                                 <span class="d-block h5 text-hover-primary mb-0">
                                                         ${employee.lastName} ${employee.firstName}
                                                 </span>
-                                                <span class="d-block font-size-sm text-body">${employee.email}</span>
-                                            </div>
-                                        </c:if>
-                                        <c:if test="${empty employee.imagePath}">
-                                            <div class="avatar avatar-soft-primary avatar-circle">
-                                                <span class="avatar-initials">${fn:substring(employee.firstName, 0, 1)}</span>
-                                            </div>
-                                            <div class="ml-3">
+                                                    <span class="d-block font-size-sm text-body">${employee.email}</span>
+                                                </div>
+                                            </c:if>
+                                            <c:if test="${empty employee.imagePath}">
+                                                <div class="avatar avatar-soft-primary avatar-circle">
+                                                    <span class="avatar-initials">${fn:substring(employee.firstName, 0, 1)}</span>
+                                                </div>
+                                                <div class="ml-3">
                                                 <span class="d-block h5 text-hover-primary mb-0">
                                                         ${employee.lastName} ${employee.firstName}
                                                 </span>
-                                                <span class="d-block font-size-sm text-body">${employee.email}</span>
-                                            </div>
+                                                    <span class="d-block font-size-sm text-body">${employee.email}</span>
+                                                </div>
+                                            </c:if>
                                         </c:if>
-                                    </c:if>
-                                </a>
+                                    </a>
                             </td>
 
                             <td>${employee.phoneNumber}</td>

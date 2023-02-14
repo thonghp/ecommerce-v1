@@ -166,4 +166,31 @@ public class EmployeeService {
             listEmployee(message);
         }
     }
+
+    /**
+     * Get the employee's infornamtions by id from request and display it to user.
+     *
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException      If an input or output error is detected when the servlet handles the GET request
+     */
+    public void editEmployee() throws ServletException, IOException {
+        Integer id = Integer.valueOf(request.getParameter("id"));
+
+        User user = userDAO.findById(id);
+
+        Map<Role, String> checkedRoles = getCheckedRoles(user);
+
+        request.setAttribute("checkedRoles", checkedRoles);
+
+        String message;
+
+        if (user == null) {
+            message = "Không tìm thấy nhân viên";
+            listEmployee(message);
+        } else {
+            request.setAttribute("user", user);
+            request.setAttribute("title", "Admin - Chỉnh sửa nhân viên");
+            createEmployee(user);
+        }
+    }
 }
