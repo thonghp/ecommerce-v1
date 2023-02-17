@@ -184,7 +184,7 @@ public class UserDAOTest {
 
     @Test
     public void testFindAll() {
-        String keyword = "";
+        String keyword = "anh kiet ta";
         String sortField = "id";
         String sortType = "ASC";
         int pageSize = 5;

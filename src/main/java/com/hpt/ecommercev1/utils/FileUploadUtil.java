@@ -50,7 +50,7 @@ public class FileUploadUtil {
      * @param nameDirectoryServer The name of server directory.
      * @return The path of server directory where the uploaded file will be saved.
      */
-    private static String getDirectoryServerPath(HttpServletRequest request, String nameDirectoryServer) {
+    public static String getDirectoryServerPath(HttpServletRequest request, String nameDirectoryServer) {
         String serverPath = request.getServletContext().getRealPath("");
 
         return serverPath + File.separator + DEFAULT_IMAGE_DIRECTORY + File.separator + nameDirectoryServer;

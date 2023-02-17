@@ -22,197 +22,218 @@
 
 <main id="content" role="main" class="main">
     <div class="content container-fluid">
-        <form class="js-step-form py-md-5" method="post" enctype="multipart/form-data" action="create_employee"
+        <c:if test="${not empty user.id}">
+        <form class="js-step-form py-md-5" method="post" enctype="multipart/form-data" action="update_employee"
               id="userForm">
-            <div class="row justify-content-lg-center">
-                <div class="col-lg-8">
-                    <div id="addUserStepFormContent">
-                        <div id="addUserStepProfile" class="card card-lg active">
-                            <div class="card-body">
-                                <div class="row form-group">
-                                    <label class="col-sm-3 col-form-label input-label">Ảnh cá nhân</label>
+            <input type="hidden" name="id" value="${user.id}"/>
+            <input type="hidden" name="addressId" value="${user.address.id}">
+            </c:if>
 
-                                    <div class="col-sm-9">
-                                        <div class="d-flex align-items-center">
-                                            <label class="avatar avatar-xl avatar-circle avatar-uploader mr-5"
-                                                   for="avatarUploader">
+            <c:if test="${empty user.id}">
+            <form class="js-step-form py-md-5" method="post" enctype="multipart/form-data" action="create_employee"
+                  id="userForm">
+                </c:if>
 
-                                                <c:if test="${not empty user.imagePath}">
-                                                    <img id="avatarImg" class="avatar-img" alt="Image Description"
-                                                         src="../images/employee/${user.id}/${user.imagePath}">
-                                                </c:if>
-                                                <c:if test="${empty user.imagePath}">
-                                                    <img id="avatarImg" class="avatar-img" alt="Image Description"
-                                                         src="../images/default/user.jpg">
-                                                </c:if>
+                <div class="row justify-content-lg-center">
+                    <div class="col-lg-8">
+                        <div id="addUserStepFormContent">
+                            <div id="addUserStepProfile" class="card card-lg active">
+                                <div class="card-body">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 col-form-label input-label">Ảnh cá nhân</label>
 
-                                                <input type="file" class="js-file-attach avatar-uploader-input"
-                                                       id="avatarUploader" name="image"
-                                                       data-hs-file-attach-options='{
+                                        <div class="col-sm-9">
+                                            <div class="d-flex align-items-center">
+                                                <label class="avatar avatar-xl avatar-circle avatar-uploader mr-5"
+                                                       for="avatarUploader">
+
+                                                    <c:if test="${not empty user.imagePath}">
+                                                        <img id="avatarImg" class="avatar-img" alt="Image Description"
+                                                             src="../images/employee/${user.id}/${user.imagePath}">
+                                                    </c:if>
+                                                    <c:if test="${empty user.imagePath}">
+                                                        <img id="avatarImg" class="avatar-img" alt="Image Description"
+                                                             src="../images/default/user.jpg">
+                                                    </c:if>
+
+                                                    <input type="file" class="js-file-attach avatar-uploader-input"
+                                                           id="avatarUploader" name="image"
+                                                           data-hs-file-attach-options='{
                                                        "textTarget": "#avatarImg",
                                                        "mode": "image",
                                                        "targetAttr": "src",
                                                        "resetTarget": ".js-file-attach-reset-img",
-                                                       "resetImg": "./assets/img/160x160/img1.jpg",
+                                                       "resetImg": "../images/default/user.jpg",
                                                        "allowTypes": [".png", ".jpeg", ".jpg"]}'>
 
-                                                <span class="avatar-uploader-trigger">
+                                                    <span class="avatar-uploader-trigger">
                                                     <i class="tio-edit avatar-uploader-icon shadow-soft"></i>
                                                 </span>
-                                            </label>
+                                                </label>
 
-                                            <button type="button" class="js-file-attach-reset-img btn btn-white">
-                                                Xoá
-                                            </button>
+                                                <button type="button" class="js-file-attach-reset-img btn btn-white">
+                                                    Xoá
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="lastNameLabel"
+                                               class="col-sm-3 col-form-label input-label">Họ</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="lastName" id="lastNameLabel"
+                                                   placeholder="Họ" value="${user.lastName}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="firstNameLabel"
+                                               class="col-sm-3 col-form-label input-label">Tên</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="firstName" id="firstNameLabel"
+                                                   placeholder="Tên" value="${user.firstName}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="emailLabel"
+                                               class="col-sm-3 col-form-label input-label">Email</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="email" class="form-control" name="email" id="emailLabel"
+                                                   placeholder="example@gmail.com" value="${user.email}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="passwordLabel" class="col-sm-3 col-form-label input-label">
+                                            Mật khẩu
+                                        </label>
+
+                                        <div class="col-sm-9">
+                                            <input type="password"
+                                                   class="form-control ${not empty user.id ? 'ignore' : ''}"
+                                                   name="password"
+                                                   id="passwordLabel"
+                                                   placeholder="${empty user.id ? '' : 'Để trống nếu không muốn thay đổi mật khẩu'}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="phoneLabel" class="col-sm-3 col-form-label input-label">
+                                            Số điện thoại
+                                        </label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="phone" id="phoneLabel"
+                                                   value="${user.phoneNumber}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="streetLabel"
+                                               class="col-sm-3 col-form-label input-label">Đường</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="street" id="streetLabel"
+                                                   value="${user.address.street}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="wardLabel" class="col-sm-3 col-form-label input-label">
+                                            Phường / Xã
+                                        </label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="ward" id="wardLabel"
+                                                   value="${user.address.ward}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="districtLabel" class="col-sm-3 col-form-label input-label">
+                                            Quận / Huyện
+                                        </label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="district" id="districtLabel"
+                                                   value="${user.address.district}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="cityLabel" class="col-sm-3 col-form-label input-label">
+                                            Tỉnh / Thành phố
+                                        </label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="city" id="cityLabel"
+                                                   value="${user.address.city}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="roleLabel" class="col-sm-3 col-form-label input-label">
+                                            Vai trò
+                                        </label>
+
+                                        <div class="col-sm-9 pt-1">
+                                            <c:if test="${empty user}">
+                                                <c:forEach items="${checkedRoles}" var="role">
+                                                    <input type="checkbox" id="roleLabel" name="role" class="mt-2"
+                                                           value="${role.key.id}" ${role.key.id == 2 ? 'checked' : '' }>
+                                                    ${role.key.name} - <small>${role.key.description}</small>
+                                                    <br>
+                                                </c:forEach>
+                                            </c:if>
+
+
+                                            <c:if test="${not empty user}">
+                                                <c:forEach var="role" items="${checkedRoles}">
+                                                    <input id="roleLabel" type="checkbox" class="mt-2" name="role"
+                                                           value="${role.key.id}"
+                                                        ${role.value}> ${role.key.name}
+                                                    - <small>${role.key.description}</small><br>
+                                                </c:forEach>
+                                            </c:if>
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <label for="enableLabel" class="col-sm-3 col-form-label input-label">
+                                            Trạng thái
+                                        </label>
+
+                                        <div class="col-sm-9 pt-1">
+                                            <c:if test="${empty user}">
+                                                <input type="checkbox" id="enableLabel" name="enable" class="mt-2"
+                                                       checked>
+                                            </c:if>
+                                            <c:if test="${not empty user}">
+                                                <input type="checkbox" id="enableLabel" name="enable"
+                                                       class="mt-2" ${user.enabled ? "checked" : ""}>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="row form-group">
-                                    <label for="lastNameLabel" class="col-sm-3 col-form-label input-label">Họ</label>
-
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="lastName" id="lastNameLabel"
-                                               placeholder="Họ" value="${user.lastName}">
-                                    </div>
+                                <div class="card-footer d-flex justify-content-end align-items-center">
+                                    <button type="submit" class="btn btn-primary">
+                                        Xác nhận
+                                    </button>
+                                    <button type="button" class="btn btn-danger pr-3 pl-3 ml-3">
+                                        <a href="list_employees" class="text-white">Hủy bỏ</a>
+                                    </button>
                                 </div>
-
-                                <div class="row form-group">
-                                    <label for="firstNameLabel" class="col-sm-3 col-form-label input-label">Tên</label>
-
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="firstName" id="firstNameLabel"
-                                               placeholder="Tên" value="${user.firstName}">
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <label for="emailLabel" class="col-sm-3 col-form-label input-label">Email</label>
-
-                                    <div class="col-sm-9">
-                                        <input type="email" class="form-control" name="email" id="emailLabel"
-                                               placeholder="example@gmail.com" value="${user.email}">
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <label for="passwordLabel" class="col-sm-3 col-form-label input-label">
-                                        Mật khẩu
-                                    </label>
-
-                                    <div class="col-sm-9">
-                                        <input type="password" class="form-control" name="password" id="passwordLabel"
-                                               placeholder="${empty user.id ? '' : 'Để trống nếu không muốn thay đổi mật khẩu'}">
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <label for="phoneLabel" class="col-sm-3 col-form-label input-label">
-                                        Số điện thoại
-                                    </label>
-
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="phone" id="phoneLabel"
-                                               value="${user.phoneNumber}">
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <label for="streetLabel" class="col-sm-3 col-form-label input-label">Đường</label>
-
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="street" id="streetLabel"
-                                               value="${user.address.street}">
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <label for="wardLabel" class="col-sm-3 col-form-label input-label">
-                                        Phường / Xã
-                                    </label>
-
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="ward" id="wardLabel"
-                                               value="${user.address.ward}">
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <label for="districtLabel" class="col-sm-3 col-form-label input-label">
-                                        Quận / Huyện
-                                    </label>
-
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="district" id="districtLabel"
-                                               value="${user.address.district}">
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <label for="cityLabel" class="col-sm-3 col-form-label input-label">
-                                        Tỉnh / Thành phố
-                                    </label>
-
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="city" id="cityLabel"
-                                               value="${user.address.city}">
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <label for="roleLabel" class="col-sm-3 col-form-label input-label">
-                                        Vai trò
-                                    </label>
-
-                                    <div class="col-sm-9 pt-1">
-                                        <c:if test="${empty user}">
-                                            <c:forEach items="${checkedRoles}" var="role">
-                                                <input type="checkbox" id="roleLabel" name="role" class="mt-2"
-                                                       value="${role.key.id}" ${role.key.id == 2 ? 'checked' : '' }>
-                                                ${role.key.name} - <small>${role.key.description}</small>
-                                                <br>
-                                            </c:forEach>
-                                        </c:if>
-
-
-                                        <c:if test="${not empty user}">
-                                            <c:forEach var="role" items="${checkedRoles}">
-                                                <input id="roleLabel" type="checkbox" class="mt-2" name="role"
-                                                       value="${role.key.id}"
-                                                    ${role.value}> ${role.key.name}
-                                                - <small>${role.key.description}</small><br>
-                                            </c:forEach>
-                                        </c:if>
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <label for="enableLabel" class="col-sm-3 col-form-label input-label">
-                                        Trạng thái
-                                    </label>
-
-                                    <div class="col-sm-9 pt-1">
-                                        <c:if test="${empty user}">
-                                            <input type="checkbox" id="enableLabel" name="enable" class="mt-2" checked>
-                                        </c:if>
-                                        <c:if test="${not empty user}">
-                                            <input type="checkbox" id="enableLabel" name="enable"
-                                                   class="mt-2" ${user.enabled ? "checked" : ""}>
-                                        </c:if>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card-footer d-flex justify-content-end align-items-center">
-                                <button type="submit" class="btn btn-primary">
-                                    Xác nhận <i class="tio-chevron-right"></i>
-                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
     </div>
 </main>
 

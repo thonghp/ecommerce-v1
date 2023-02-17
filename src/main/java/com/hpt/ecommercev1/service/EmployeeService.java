@@ -3,6 +3,7 @@ package com.hpt.ecommercev1.service;
 import com.hpt.ecommercev1.dao.RoleDAO;
 import com.hpt.ecommercev1.dao.UserDAO;
 import com.hpt.ecommercev1.entity.Address;
+import com.hpt.ecommercev1.entity.HashGenerator;
 import com.hpt.ecommercev1.entity.Role;
 import com.hpt.ecommercev1.entity.User;
 
@@ -40,7 +41,7 @@ public class EmployeeService {
      * @throws IOException      If an input or output error is detected when the servlet handles the GET request
      */
     public void listEmployee() throws ServletException, IOException {
-        listEmployee(null);
+        listEmployee(null, 1, "");
     }
 
     /**
@@ -50,24 +51,25 @@ public class EmployeeService {
      * @throws ServletException If the request for the GET could not be handled
      * @throws IOException      If an input or output error is detected when the servlet handles the GET request
      */
-    public void listEmployee(String message) throws ServletException, IOException {
+    public void listEmployee(String message, int pageNum, String keyword) throws ServletException, IOException {
         // default page is 1
-        int pageNumber = (request.getParameter("pageNumber") == null) ? 1 : Integer.parseInt(request.getParameter("pageNumber"));
+        int pageNumber = (request.getParameter("pageNumber") == null) ? pageNum : Integer.parseInt(request.getParameter("pageNumber"));
 
         // default keyword is empty
-        String keyword = (request.getParameter("keyword") == null) ? "" : request.getParameter("keyword");
+        String search = (request.getParameter("keyword") == null) ? keyword : request.getParameter("keyword");
 
         int numberOfEmployees = userDAO.countByKeyword("");
-        int totalKeywordResults = userDAO.countByKeyword(keyword);
+        int totalKeywordResults = userDAO.countByKeyword(search);
 
-        List<User> employees = userDAO.findAll(keyword, DEFAULT_SORT_FIELD, DEFAULT_SORT_TYPE, DEFAULT_PAGE_SIZE, pageNumber);
+        List<User> employees = userDAO.findAll(search, DEFAULT_SORT_FIELD, DEFAULT_SORT_TYPE, DEFAULT_PAGE_SIZE, pageNumber);
+        System.out.println("employees: " + employees.get(0));
 
         long totalPages = totalKeywordResults / DEFAULT_PAGE_SIZE;
         if (numberOfEmployees % DEFAULT_PAGE_SIZE != 0) totalPages++;
 
         request.setAttribute("currentPage", pageNumber);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("keyword", keyword);
+        request.setAttribute("keyword", search);
         request.setAttribute("listEmployees", employees);
 
         if (message != null) request.setAttribute("message", message);
@@ -163,7 +165,7 @@ public class EmployeeService {
             }
 
             String message = "Nhân viên " + user.getLastName() + " " + user.getFirstName() + " đã được thêm thành công !";
-            listEmployee(message);
+            listEmployee(message, 1, "");
         }
     }
 
@@ -186,11 +188,71 @@ public class EmployeeService {
 
         if (user == null) {
             message = "Không tìm thấy nhân viên";
-            listEmployee(message);
+            listEmployee(message, 1, "");
         } else {
             request.setAttribute("user", user);
             request.setAttribute("title", "Admin - Chỉnh sửa nhân viên");
             createEmployee(user);
+        }
+    }
+
+    /**
+     * Get the employee's information from the request and update it into the database.
+     *
+     * @throws ServletException If the request for the POST could not be handled
+     * @throws IOException      If an input or output error is detected when the servlet handles the POST request
+     */
+    public void updateEmployee() throws ServletException, IOException {
+        Integer id = Integer.valueOf(request.getParameter("id"));
+        Integer addressId = Integer.valueOf(request.getParameter("addressId"));
+
+        User user = readAllFields(new User());
+        user.setId(id);
+        user.getAddress().setId(addressId);
+
+        User userById = userDAO.findById(id);
+        User userByEmail = userDAO.findByEmail(user.getEmail());
+
+        String message;
+
+        if (userById == null) {
+            message = "Không tìm thấy nhân viên";
+            listEmployee(message, 1, "");
+        } else {
+            if (userByEmail != null && !id.equals(userByEmail.getId())) {
+                message = "Email " + user.getEmail() + " đã tồn tại!!!";
+                request.setAttribute("message", message);
+                request.setAttribute("user", user);
+                request.setAttribute("title", "Chỉnh sửa nhân viên");
+
+                createEmployee(user);
+            } else {
+                if (!user.getPassword().isEmpty())
+                    user.setPassword(HashGenerator.generateMD5(user.getPassword()));
+                else
+                    user.setPassword(userById.getPassword());
+
+                String fileName = extractFileName(request, "image");
+
+                if (!fileName.isEmpty()) {
+                    user.setImagePath(fileName);
+                    String nameDirectoryServer = "employee" + File.separator + id;
+                    String directoryServerPath = getDirectoryServerPath(request, nameDirectoryServer);
+
+                    cleanDir(directoryServerPath);
+                    cleanDir(DEFAULT_APP_IMAGE_DIRECTORY + nameDirectoryServer);
+
+                    saveFileOnServer(request, nameDirectoryServer, "image", fileName);
+                    saveFileOnApp(request, nameDirectoryServer, fileName);
+                } else {
+                    user.setImagePath(userById.getImagePath());
+                }
+
+                userDAO.update(user);
+                String fullName = user.getFirstName() + " " + user.getLastName();
+                message = "Nhân viên " + fullName + " đã được cập nhật thành công !";
+                listEmployee(message, 1, fullName);
+            }
         }
     }
 }
