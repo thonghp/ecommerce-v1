@@ -236,13 +236,13 @@
                             <td>
                                 <c:if test="${employee.enabled}">
                                     <a class="fas fa-check-circle fa-2x icon-green"
-                                       href="enable_employee?enabled=false&id=${employee.id}"
+                                       href="status_employee?enabled=false&id=${employee.id}"
                                        title="Vô hiệu hoá">
                                     </a>
                                 </c:if>
                                 <c:if test="${!employee.enabled}">
                                     <a class="fas fa-check-circle fa-2x icon-gray"
-                                       href="enable_employee?enabled=true&id=${employee.id}" title="Kích hoạt">
+                                       href="status_employee?enabled=true&id=${employee.id}" title="Kích hoạt">
                                     </a>
                                 </c:if>
                             </td>

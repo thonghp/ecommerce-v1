@@ -62,7 +62,6 @@ public class EmployeeService {
         int totalKeywordResults = userDAO.countByKeyword(search);
 
         List<User> employees = userDAO.findAll(search, DEFAULT_SORT_FIELD, DEFAULT_SORT_TYPE, DEFAULT_PAGE_SIZE, pageNumber);
-        System.out.println("employees: " + employees.get(0));
 
         long totalPages = totalKeywordResults / DEFAULT_PAGE_SIZE;
         if (numberOfEmployees % DEFAULT_PAGE_SIZE != 0) totalPages++;
@@ -254,5 +253,29 @@ public class EmployeeService {
                 listEmployee(message, 1, fullName);
             }
         }
+    }
+
+    /**
+     * Get the employee's id and enable status from the request and update it to the database.
+     *
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException      If an input or output error is detected when the servlet handles the GET request
+     */
+    public void updateEmployeeStatus() throws ServletException, IOException {
+        Integer id = Integer.valueOf(request.getParameter("id"));
+        boolean enabled = Boolean.parseBoolean(request.getParameter("enabled"));
+
+        User user = userDAO.findById(id);
+
+        String message;
+
+        if (user == null) {
+            message = "Không tìm thấy nhân viên hoặc nhân viên đã bị xóa";
+        } else {
+            userDAO.updateEnableStatus(id, enabled);
+            message = "Nhân viên " + user.getLastName() + " " + user.getFirstName() + " đã được "
+                    + (enabled ? "kích hoạt" : "vô hiệu hóa") + " thành công !";
+        }
+        listEmployee(message, 1, "");
     }
 }
