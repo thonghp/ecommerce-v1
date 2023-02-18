@@ -215,7 +215,7 @@ public class EmployeeService {
         String message;
 
         if (userById == null) {
-            message = "Không tìm thấy nhân viên";
+            message = "Không tìm thấy nhân viên hoặc nhân viên đã bị xóa";
             listEmployee(message, 1, "");
         } else {
             if (userByEmail != null && !id.equals(userByEmail.getId())) {
@@ -275,6 +275,31 @@ public class EmployeeService {
             userDAO.updateEnableStatus(id, enabled);
             message = "Nhân viên " + user.getLastName() + " " + user.getFirstName() + " đã được "
                     + (enabled ? "kích hoạt" : "vô hiệu hóa") + " thành công !";
+        }
+        listEmployee(message, 1, "");
+    }
+
+    /**
+     * Get the employee's id from the request and delete it from the database.
+     *
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException      If an input or output error is detected when the servlet handles the GET request
+     */
+    public void deleteEmployee() throws ServletException, IOException {
+        Integer id = Integer.valueOf(request.getParameter("id"));
+
+        User user = userDAO.findById(id);
+
+        String message;
+
+        if (user == null) {
+            message = "Không tìm thấy nhân viên hoặc nhân viên đã bị xóa";
+        } else {
+            userDAO.delete(id);
+            String nameDirectoryServer = "employee" + File.separator + id;
+            removeDir(getDirectoryServerPath(request, nameDirectoryServer));
+            removeDir(DEFAULT_APP_IMAGE_DIRECTORY + nameDirectoryServer);
+            message = "Nhân viên " + user.getLastName() + " " + user.getFirstName() + " đã được xóa thành công !";
         }
         listEmployee(message, 1, "");
     }

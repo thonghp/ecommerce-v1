@@ -234,32 +234,38 @@
                             <td>${employee.address}</td>
                             <td>${employee.roles}</td>
                             <td>
-                                <c:if test="${employee.enabled}">
-                                    <a class="fas fa-check-circle fa-2x icon-green"
-                                       href="status_employee?enabled=false&id=${employee.id}"
-                                       title="Vô hiệu hoá">
-                                    </a>
-                                </c:if>
-                                <c:if test="${!employee.enabled}">
-                                    <a class="fas fa-check-circle fa-2x icon-gray"
-                                       href="status_employee?enabled=true&id=${employee.id}" title="Kích hoạt">
-                                    </a>
+                                <c:if test="${employee.id == 1}"></c:if>
+                                <c:if test="${employee.id != 1}">
+                                    <c:if test="${employee.enabled}">
+                                        <a class="fas fa-check-circle fa-2x icon-green"
+                                           href="status_employee?enabled=false&id=${employee.id}" title="Vô hiệu hoá">
+                                        </a>
+                                    </c:if>
+                                    <c:if test="${!employee.enabled}">
+                                        <a class="fas fa-check-circle fa-2x icon-gray"
+                                           href="status_employee?enabled=true&id=${employee.id}" title="Kích hoạt">
+                                        </a>
+                                    </c:if>
                                 </c:if>
                             </td>
                             <td>
-                                <div>
-                                    <a class="btn btn-sm btn-white" href="edit_employee?id=${employee.id}">
-                                        <i class="tio-edit"></i> Chỉnh sửa
-                                    </a>
-                                    <a class="btn btn-sm btn-white link-delete"
-                                       href="delete_employee?id=${employee.id}" entityId="${employee.id}">
-                                        <i class="tio-delete"></i> Xóa
-                                    </a>
-                                </div>
+                                <c:if test="${employee.id == 1}">
+                                    <div></div>
+                                </c:if>
+                                <c:if test="${employee.id != 1}">
+                                    <div>
+                                        <a class="btn btn-sm btn-white" href="edit_employee?id=${employee.id}">
+                                            <i class="tio-edit"></i> Chỉnh sửa
+                                        </a>
+                                        <a class="btn btn-sm btn-white link-delete"
+                                           href="delete_employee?id=${employee.id}" entityId="${employee.id}">
+                                            <i class="tio-delete"></i> Xóa
+                                        </a>
+                                    </div>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>
-
                     </tbody>
                 </table>
             </div>
@@ -290,6 +296,8 @@
     </div>
 </main>
 
+<jsp:include page="confirm_modal.jsp"/>
+
 <jsp:include page="js.jsp"/>
 
 <script type="text/javascript">
@@ -301,6 +309,20 @@
 
         setTimeout(hideMessage, 5000);
     }
+
+    function showDeleteConfirmModal(link) {
+        let entityId = link.attr("entityId");
+        $("#yesButton").attr("href", link.attr("href")); // set value of attribute
+        $("#confirmText").text("Bạn có muốn xoá nhân viên không ?");
+        $("#confirmModal").modal();
+    }
+
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            showDeleteConfirmModal($(this));
+        });
+    });
 </script>
 
 </body>
