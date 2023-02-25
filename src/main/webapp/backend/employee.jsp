@@ -38,15 +38,15 @@
             <div class="card-header">
                 <div class="row justify-content-between align-items-center flex-grow-1">
                     <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
-                        <form>
+                        <form action="list_employees" method="get">
                             <div class="input-group input-group-merge input-group-flush">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">
                                         <i class="tio-search"></i>
                                     </div>
                                 </div>
-                                <input id="datatableSearch" type="search" class="form-control"
-                                       placeholder="Tìm kiếm nhân viên">
+                                <input type="search" class="form-control" placeholder="Tìm kiếm nhân viên"
+                                       name="keyword" value="${keyword}">
                             </div>
                         </form>
                     </div>
@@ -64,79 +64,33 @@
                                     <span class="dropdown-header">Tuỳ chọn</span>
                                     <a id="export-copy" class="dropdown-item" href="#">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                             src="assets\svg\illustrations\copy.svg" alt="Image Description">
+                                             src="../images/svg/illustrations/copy.svg" alt="Image Description">
                                         Sao chép
                                     </a>
                                     <a id="export-print" class="dropdown-item" href="#">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                             src="assets\svg\illustrations\print.svg" alt="Image Description">
+                                             src="../images/svg/illustrations/print.svg" alt="Image Description">
                                         In
                                     </a>
                                     <div class="dropdown-divider"></div>
                                     <span class="dropdown-header">Tuỳ chọn tải xuống</span>
                                     <a id="export-excel" class="dropdown-item" href="#">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                             src="assets\svg\brands\excel.svg" alt="Image Description">
+                                             src="../images/svg/brands/excel.svg" alt="Image Description">
                                         Excel
                                     </a>
                                     <a id="export-csv" class="dropdown-item" href="#">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                             src="assets\svg\components\placeholder-csv-format.svg"
+                                             src="../images/svg/components/placeholder-csv-format.svg"
                                              alt="Image Description">
                                         CSV
                                     </a>
                                     <a id="export-pdf" class="dropdown-item" href="#">
-                                        <img class="avatar avatar-xss avatar-4by3 mr-2" src="assets\svg\brands\pdf.svg"
+                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                             src="../images/svg/brands/pdf.svg"
                                              alt="Image Description">
                                         PDF
                                     </a>
-                                </div>
-                            </div>
-
-                            <div class="hs-unfold">
-                                <a class="js-hs-unfold-invoker btn btn-sm btn-white" href="#"
-                                   data-hs-unfold-options=
-                                           '{"target": "#usersFilterDropdown","type": "css-animation","smartPositionOff": true}'>
-                                    <i class="tio-filter-list mr-1"></i> Lọc
-                                </a>
-
-                                <div id="usersFilterDropdown"
-                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right dropdown-card card-dropdown-filter-centered"
-                                     style="min-width: 22rem;">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5 class="card-header-title">Lọc nhân viên</h5>
-                                            <a class="js-hs-unfold-invoker btn btn-icon btn-xs btn-ghost-secondary ml-2"
-                                               href="#" data-hs-unfold-options=
-                                                       '{"target": "#usersFilterDropdown","type": "css-animation","smartPositionOff": true}'>
-                                                <i class="tio-clear tio-lg"></i>
-                                            </a>
-                                        </div>
-
-                                        <div class="card-body">
-                                            <form>
-                                                <div class="form-row">
-                                                    <div class="col-12 form-group">
-                                                        <small class="text-cap mb-2">Vai trò</small>
-                                                        <select class="js-select2-custom js-datatable-filter custom-select"
-                                                                size="1" style="opacity: 0;"
-                                                                data-target-column-index="3"
-                                                                data-hs-select2-options='{"searchInputPlaceholder": "Tìm kiếm vai trò"}'>
-
-                                                            <option value="2" selected>Nhân viên bán hàng</option>
-                                                            <option value="1">Admin</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <a class="js-hs-unfold-invoker btn btn-block btn-primary"
-                                                   href="#" data-hs-unfold-options=
-                                                           '{"target": "#usersFilterDropdown","type": "css-animation","smartPositionOff": true}'>
-                                                    Áp dụng
-                                                </a>
-                                            </form>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>

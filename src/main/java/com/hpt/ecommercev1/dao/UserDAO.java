@@ -492,7 +492,7 @@ public class UserDAO implements Serializable {
     public List<User> findAll(String keyword, String sortField, String sortType, int pageSize, int pageIndex) {
         List<User> users = new ArrayList<>();
         String sql = "SELECT id, image_path, first_name, last_name, email, phone_number, enabled " +
-                "FROM users WHERE CONCAT(email, ' ', first_name, ' ', last_name) LIKE ? " +
+                "FROM users WHERE CONCAT(email, ' ', last_name, ' ', first_name) LIKE ? " +
                 "ORDER BY " + sortField + " " + sortType + " LIMIT ? OFFSET ?";
 
         // use try-with-resources Statement to auto close the connection.

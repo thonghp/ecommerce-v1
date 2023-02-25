@@ -63,6 +63,8 @@ public class EmployeeService {
 
         List<User> employees = userDAO.findAll(search, DEFAULT_SORT_FIELD, DEFAULT_SORT_TYPE, DEFAULT_PAGE_SIZE, pageNumber);
 
+        List<Role> roles = RoleDAO.getInstance().findAllRolesExceptAdmin();
+
         long totalPages = totalKeywordResults / DEFAULT_PAGE_SIZE;
         if (numberOfEmployees % DEFAULT_PAGE_SIZE != 0) totalPages++;
 
@@ -70,6 +72,7 @@ public class EmployeeService {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("keyword", search);
         request.setAttribute("listEmployees", employees);
+        request.setAttribute("listRoles", roles);
 
         if (message != null) request.setAttribute("message", message);
 
@@ -77,6 +80,12 @@ public class EmployeeService {
         request.getRequestDispatcher(employeePage).forward(request, response);
     }
 
+    /**
+     * Get role of employee corresponding from database and display it to user.
+     *
+     * @param user The user to get role.
+     * @return A map of role and checked status.
+     */
     public Map<Role, String> getCheckedRoles(User user) {
         Map<Role, String> roleMap = new HashMap<>();
 
@@ -85,14 +94,50 @@ public class EmployeeService {
         return roleMap;
     }
 
+    /**
+     * Display the employee form to the user.
+     *
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException      If an input or output error is detected when the servlet handles the GET request
+     */
     public void createEmployee() throws ServletException, IOException {
         createEmployee(new User());
     }
 
+    /**
+     * Display employee form with employee information to user
+     *
+     * @param user A user object to be displayed in the form
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException      If an input or output error is detected when the servlet handles the GET request
+     */
     public void createEmployee(User user) throws ServletException, IOException {
         request.setAttribute("checkedRoles", getCheckedRoles(user));
         String createEmployeePage = "employee_form.jsp";
         request.getRequestDispatcher(createEmployeePage).forward(request, response);
+    }
+
+    /**
+     * Capitalize the first letter of each letter.
+     *
+     * @param str The string to be capitalized.
+     * @return A capitalized string.
+     */
+    public static String capitalize(String str) {
+        if (str == null || str.length() == 0) return str;
+        str = str.trim();
+        String[] split = str.split("\\s+"); // split by one or more whitespace
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < split.length; i++) {
+            String s = split[i];
+            s = s.substring(0, 1).toUpperCase() + s.substring(1);
+            if (i == split.length - 1)
+                sb.append(s);
+            else
+                sb.append(s).append(" ");
+
+        }
+        return sb.toString();
     }
 
     private User readAllFields(User user) {
@@ -108,8 +153,8 @@ public class EmployeeService {
         String[] roles = request.getParameterValues("role");
         boolean enabled = "on".equals(request.getParameter("enable"));
 
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
+        user.setFirstName(capitalize(firstName));
+        user.setLastName(capitalize(lastName));
         user.setEmail(email);
         user.setPassword(password);
         user.setPhoneNumber(phone);
@@ -248,7 +293,7 @@ public class EmployeeService {
                 }
 
                 userDAO.update(user);
-                String fullName = user.getFirstName() + " " + user.getLastName();
+                String fullName = user.getLastName() + " " + user.getFirstName();
                 message = "Nhân viên " + fullName + " đã được cập nhật thành công !";
                 listEmployee(message, 1, fullName);
             }
@@ -276,7 +321,9 @@ public class EmployeeService {
             message = "Nhân viên " + user.getLastName() + " " + user.getFirstName() + " đã được "
                     + (enabled ? "kích hoạt" : "vô hiệu hóa") + " thành công !";
         }
-        listEmployee(message, 1, "");
+
+        String fullName = user.getLastName() + " " + user.getFirstName();
+        listEmployee(message, 1, fullName);
     }
 
     /**
