@@ -165,6 +165,12 @@
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Nhân viên</span>
                             </a>
                         </li>
+                        <li class="navbar-vertical-aside-has-menu">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="list_categories">
+                                <i class="tio-category nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Thể loại</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
